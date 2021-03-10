@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "oJo8l8zMsZwv7yUnC6NvX402ViaaMdFkIwks+qQizhW9n1W2T2is9XDGGKuyT+aqR0o22eKZJvQ1WbTbvGfl1g==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\vnoum\\Desktop\\Projets Rider\\ontoUcmd\\ontoUcmd\\ontoUcmd.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\vnoum\\.nuget\\packages\\lumenworkscsvreader\\4.0.0\\lumenworkscsvreader.4.0.0.nupkg.sha512",
+    "C:\\Users\\vnoum\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
