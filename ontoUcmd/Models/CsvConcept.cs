@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using ConstellationEditor.Models;
 using LumenWorks.Framework.IO.Csv;
 
 namespace ontoUcmd.Models
@@ -29,6 +30,15 @@ namespace ontoUcmd.Models
             }
 
             return csvConcepts;
+        }
+        
+        public static NodeVt ToNodeElement(CsvConcept item)
+        {
+            NodeVt nodeItem = new NodeVt()
+            {
+                name = item.Name, label = item.Label, type = "concept", group = "unesco"
+            };
+            return nodeItem;
         }
         
     }

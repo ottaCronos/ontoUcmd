@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using ontoUcmd.Models;
 using ontoUcmd.Services;
@@ -46,8 +47,11 @@ namespace ontoUcmd
             }
         }
 
-        static void Build()
+        static async void Build()
         {
+
+            bool locationBuild = false;
+            
             Console.WriteLine();
             Console.WriteLine("Build JSON from CSV.");
             
@@ -58,9 +62,13 @@ namespace ontoUcmd
 
             Console.WriteLine("Infos :");
             string path = ini.GetKeyValue("Config", "OutputPath");
+            string lpath = ini.GetKeyValue("Config", "OutputLocationPath");
             Console.WriteLine($"     Output path : {path}");
+            Console.WriteLine($"     Location output path : {lpath}");
             if(File.Exists(path))
                 Console.WriteLine($"     The file {path} already exists and will be updated.");
+            if(File.Exists(lpath))
+                Console.WriteLine($"     The file {lpath} already exists and will be updated.");
             Console.WriteLine();
 
             List<CsvElement> csvElements = new List<CsvElement>();
@@ -116,7 +124,40 @@ namespace ontoUcmd
             else
                 csvPublications = CsvPublication.FromFile(str);
             
-            Console.WriteLine($"Read finished. {csvElements.Count} elements.");
+            Console.WriteLine("CSV files has been read. Building graph_xx.json...");
+            Console.WriteLine("Converting...");
+            var graphData = await SerializationService.ConvertToGraphData(csvConcepts, csvElements, csvCountries, csvPeoples,
+                csvProjects, csvPublications, csvRegions);
+            Console.WriteLine("Building...");
+            SerializationService.BuildGraphData(path, graphData);
+            Console.WriteLine("Graph file has been build.");
+            
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("[Info] Do you want to build locations.txt file ? Y/N : ");
+            string resp = Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.Gray;
+            if (!string.IsNullOrEmpty(resp) && resp.ToLower() == "y")
+            {
+                locationBuild = true;
+                Console.WriteLine("Building location text file...");
+                SerializationService.BuildLocationFile(lpath, graphData, csvConcepts);
+                Console.WriteLine("Location text file has been build.");
+                Console.WriteLine($"     Location output path : {lpath}");
+            }
+            Console.WriteLine($"     Output path : {path}");
+            
+            /*Console.Write("Do you want to reveal files in explorer ? Y/N :");
+            string resp2 = Console.ReadLine();
+            if (!string.IsNullOrEmpty(resp2) && resp2.ToLower() == "y")
+            {
+                Process proc = new Process() {StartInfo = new ProcessStartInfo() {UseShellExecute = true, Arguments = @$"""{Path.GetDirectoryName(path)}""", FileName = "start"}};
+                Process proc2 = new Process() {StartInfo = new ProcessStartInfo() {UseShellExecute = true, Arguments = @$"""{Path.GetDirectoryName(lpath)}""", FileName = "start"}};
+                proc.Start();
+                if(locationBuild)
+                    proc2.Start();
+            }*/
+            Console.WriteLine("");
+            
         }
 
         static void SetPath()
@@ -133,8 +174,14 @@ namespace ontoUcmd
             string path = Console.ReadLine();
             if(File.Exists(path))
                 Console.WriteLine("     [Info] A file already exists at this location. Data inside will be ereased if you build.");
-
             ini.SetKeyValue("Config", "OutputPath", path);
+            
+            Console.Write("     Enter location text output location: ");
+            string lpath = Console.ReadLine();
+            if(File.Exists(path))
+                Console.WriteLine("     [Info] A file already exists at this location. Data inside will be ereased if you build.");
+            ini.SetKeyValue("Config", "OutputLocationPath", lpath);
+            
             ini.Save(iniPath);
             Console.WriteLine("Output path as been updated.");
         }

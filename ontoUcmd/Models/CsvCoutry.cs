@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using ConstellationEditor.Models;
 using LumenWorks.Framework.IO.Csv;
 
 namespace ontoUcmd.Models
@@ -29,6 +30,15 @@ namespace ontoUcmd.Models
             }
 
             return csvCountries;
+        }
+        
+        public static NodeCountry ToNodeElement(CsvCountry item)
+        {
+            NodeCountry nodeItem = new NodeCountry()
+            {
+                name = item.Name, label = item.Label, type = "country"
+            };
+            return nodeItem;
         }
         
     }

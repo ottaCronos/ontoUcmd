@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using ConstellationEditor.Models;
 using LumenWorks.Framework.IO.Csv;
+using ontoUcmd.Services;
 
 namespace ontoUcmd.Models
 {
@@ -32,6 +34,18 @@ namespace ontoUcmd.Models
             }
 
             return csvProjects;
+        }
+        
+        public static NodeProject ToNodeElement(CsvProject item)
+        {
+            NodeProject nodeItem = new NodeProject()
+            {
+                name = item.Name, label = item.Label, type = "element", meta = new NodeProjectMeta()
+                {
+                    description = item.Description, link = item.Link
+                }
+            };
+            return nodeItem;
         }
         
     }

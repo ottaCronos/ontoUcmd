@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using ConstellationEditor.Models;
 using LumenWorks.Framework.IO.Csv;
+using ontoUcmd.Services;
 
 namespace ontoUcmd.Models
 {
@@ -34,6 +36,18 @@ namespace ontoUcmd.Models
             }
 
             return csvPeoples;
+        }
+        
+        public static NodeCaseStudy ToNodeElement(CsvPeople item)
+        {
+            NodeCaseStudy nodeItem = new NodeCaseStudy()
+            {
+                name = item.Name, label = item.Label, type = "concept", meta = new NodeCaseStudyMeta()
+                {
+                    description = item.Description, icon = new NodeIcon() { large = item.Icon, small = item.Icon }, images = null, link = item.Link
+                }
+            };
+            return nodeItem;
         }
         
     }

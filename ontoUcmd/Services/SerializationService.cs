@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.OleDb;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using ConstellationEditor.Models;
@@ -60,16 +61,106 @@ namespace ontoUcmd.Services
         {
 
             List<NodeElement> nodeElements = new List<NodeElement>();
-            foreach (var item in elements)
-            {
-                nodeElements.Add(CsvElement.ToNodeElement(item));
+            List<NodeCountry> nodeCountries = new List<NodeCountry>();
+            List<NodeProject> nodeProjects = new List<NodeProject>();
+            List<NodeVt> nodeConcepts = new List<NodeVt>();
+            List<NodePublication> nodePublications = new List<NodePublication>();
+            List<NodeCaseStudy> nodePeople = new List<NodeCaseStudy>();
+            foreach (var item in elements) { nodeElements.Add(CsvElement.ToNodeElement(item)); }
+            foreach (var item in countries) { nodeCountries.Add(CsvCountry.ToNodeElement(item)); }
+            foreach (var item in regions) { nodeCountries.Add(CsvRegion.ToNodeElement(item)); }
+            foreach (var item in projects) { nodeProjects.Add(CsvProject.ToNodeElement(item)); }
+            foreach (var item in concepts) { nodeConcepts.Add(CsvConcept.ToNodeElement(item)); }
+            foreach (var item in publications) { nodePublications.Add(CsvPublication.ToNodeElement(item)); }
+            foreach (var item in peoples) { nodePeople.Add(CsvPeople.ToNodeElement(item)); }
+
+            List<EdgeItem> edgeItems = new List<EdgeItem>();
+            foreach (var concept in concepts) {
+                if (concept.LinkedElements.Contains(",")) {
+                    string[] items = concept.LinkedElements.Split(',');
+                    foreach (var s in items) { edgeItems.Add(new EdgeItem() { Object = concept.Name, predicate = "related", subject = s, weight = 2}); }
+                } else {
+                    if (!string.IsNullOrEmpty(concept.LinkedElements))
+                    {
+                        edgeItems.Add(new EdgeItem() { Object = concept.Name, predicate = "related", subject = concept.LinkedElements, weight = 2});
+                    }
+                }
             }
-            
+            foreach (var concept in elements) {
+                if (concept.LinkedElements.Contains(",")) {
+                    string[] items = concept.LinkedElements.Split(',');
+                    foreach (var s in items) { edgeItems.Add(new EdgeItem() { Object = concept.Name, predicate = "related", subject = s, weight = 2}); }
+                } else {
+                    if (!string.IsNullOrEmpty(concept.LinkedElements))
+                    {
+                        edgeItems.Add(new EdgeItem() { Object = concept.Name, predicate = "related", subject = concept.LinkedElements, weight = 2});
+                    }
+                }
+            }
+            foreach (var concept in countries) {
+                if (concept.LinkedElements.Contains(",")) {
+                    string[] items = concept.LinkedElements.Split(',');
+                    foreach (var s in items) { edgeItems.Add(new EdgeItem() { Object = concept.Name, predicate = "related", subject = s, weight = 2}); }
+                } else {
+                    if (!string.IsNullOrEmpty(concept.LinkedElements))
+                    {
+                        edgeItems.Add(new EdgeItem() { Object = concept.Name, predicate = "related", subject = concept.LinkedElements, weight = 2});
+                    }
+                }
+            }
+            foreach (var concept in regions) {
+                if (concept.LinkedElements.Contains(",")) {
+                    string[] items = concept.LinkedElements.Split(',');
+                    foreach (var s in items) { edgeItems.Add(new EdgeItem() { Object = concept.Name, predicate = "related", subject = s, weight = 2}); }
+                } else {
+                    if (!string.IsNullOrEmpty(concept.LinkedElements))
+                    {
+                        edgeItems.Add(new EdgeItem() { Object = concept.Name, predicate = "related", subject = concept.LinkedElements, weight = 2});
+                    }
+                }
+            }
+            foreach (var concept in peoples) {
+                if (concept.LinkedElements.Contains(",")) {
+                    string[] items = concept.LinkedElements.Split(',');
+                    foreach (var s in items) { edgeItems.Add(new EdgeItem() { Object = concept.Name, predicate = "related", subject = s, weight = 2}); }
+                } else {
+                    if (!string.IsNullOrEmpty(concept.LinkedElements))
+                    {
+                        edgeItems.Add(new EdgeItem() { Object = concept.Name, predicate = "related", subject = concept.LinkedElements, weight = 2});
+                    }
+                }
+            }
+            foreach (var concept in projects) {
+                if (concept.LinkedElements.Contains(",")) {
+                    string[] items = concept.LinkedElements.Split(',');
+                    foreach (var s in items) { edgeItems.Add(new EdgeItem() { Object = concept.Name, predicate = "related", subject = s, weight = 2}); }
+                } else {
+                    if (!string.IsNullOrEmpty(concept.LinkedElements))
+                    {
+                        edgeItems.Add(new EdgeItem() { Object = concept.Name, predicate = "related", subject = concept.LinkedElements, weight = 2});
+                    }
+                }
+            }
+            foreach (var concept in publications) {
+                if (concept.LinkedElements.Contains(",")) {
+                    string[] items = concept.LinkedElements.Split(',');
+                    foreach (var s in items) { edgeItems.Add(new EdgeItem() { Object = concept.Name, predicate = "related", subject = s, weight = 2}); }
+                } else {
+                    if (!string.IsNullOrEmpty(concept.LinkedElements))
+                    {
+                        edgeItems.Add(new EdgeItem() { Object = concept.Name, predicate = "related", subject = concept.LinkedElements, weight = 2});
+                    }
+                }
+            }
+
             GraphData graphData = new GraphData()
             {
-                Meta = new Meta() { generated = "Generated with ontoUcmd", language = "en"},
-                NodeElements = nodeElements,
-            }
+                Meta = new Meta() {generated = "Generated with ontoUcmd", language = "en"},
+                NodeElements = nodeElements, NodeCountries = nodeCountries, NodeProjects = nodeProjects, NodePublications = nodePublications,
+                NodeVts = nodeConcepts, NodeCaseStudies = nodePeople, EdgeItems = edgeItems
+            };
+
+            return graphData;
         }
 
         public static void BuildGraphData(string buildPath, GraphData graphData)
@@ -81,13 +172,13 @@ namespace ontoUcmd.Services
             {
                 nodeElementArray.Add(new JProperty(node.name, JObject.Parse(JsonConvert.SerializeObject(node))));
             } foreach (var node in graphData.NodeProjects) {
-                // nodeElementArray.Add(new JProperty(node.name, JObject.Parse(JsonConvert.SerializeObject(node))));
+                nodeElementArray.Add(new JProperty(node.name, JObject.Parse(JsonConvert.SerializeObject(node))));
             }foreach (var node in graphData.NodeCaseStudies) {
-                // nodeElementArray.Add(new JProperty(node.name, JObject.Parse(JsonConvert.SerializeObject(node))));
+                nodeElementArray.Add(new JProperty(node.name, JObject.Parse(JsonConvert.SerializeObject(node))));
             }foreach (var node in graphData.NodePublications) {
-                // nodeElementArray.Add(new JProperty(node.name, JObject.Parse(JsonConvert.SerializeObject(node))));
+                nodeElementArray.Add(new JProperty(node.name, JObject.Parse(JsonConvert.SerializeObject(node))));
             }foreach (var node in graphData.NodeCountries) {
-                // nodeElementArray.Add(new JProperty(node.name, JObject.Parse(JsonConvert.SerializeObject(node))));
+                nodeElementArray.Add(new JProperty(node.name, JObject.Parse(JsonConvert.SerializeObject(node))));
             }foreach (var node in graphData.NodeVts) {
                 nodeElementArray.Add(new JProperty(node.name, JObject.Parse(JsonConvert.SerializeObject(node))));
             }
@@ -96,8 +187,38 @@ namespace ontoUcmd.Services
             o["nodes"] = nodeElementArray;
             o["edges"] = JArray.Parse(JsonConvert.SerializeObject(graphData.EdgeItems));
             
-            File.WriteAllText($@"C:\Users\vnoum\Desktop\Projets Rider\Unesco\Unesco\wwwroot\dive\data\graph_xx.json", o.ToString());
-            Process.Start($@"""C:\Users\vnoum\AppData\Local\Programs\Microsoft VS Code\Code.exe"" ""C:\Users\vnoum\Desktop\Projets Rider\Unesco\Unesco\wwwroot\dive\data\graph_xx.json""");
+            File.WriteAllText(buildPath, o.ToString());
+        }
+
+        public static void BuildLocationFile(string buildPath, GraphData graphData, List<CsvConcept> concepts)
+        {
+            string outputText = "";
+            foreach (var node in graphData.NodeElements)
+            {
+                outputText += $"{node.name};";
+            } foreach (var node in graphData.NodeProjects) {
+                outputText += $"{node.name};";
+            }foreach (var node in graphData.NodeCaseStudies) {
+                outputText += $"{node.name};";
+            }foreach (var node in graphData.NodePublications) {
+                outputText += $"{node.name};";
+            }foreach (var node in graphData.NodeCountries) {
+                outputText += $"{node.name};";
+            }foreach (var concept in concepts)
+            {
+                List<string> items = new List<string>();
+                if (concept.LinkedElements.Contains(","))
+                    items.AddRange(concept.LinkedElements.Split(',').ToList());
+                else
+                    if (!string.IsNullOrEmpty(concept.LinkedElements))
+                        items.Add(concept.LinkedElements);
+                int linkedCount = 0;
+                if (items.Count > 0)
+                    linkedCount = items.Count;
+                outputText += $"{concept.Name}:{linkedCount}";
+            }
+            
+            File.WriteAllText(buildPath, outputText);
         }
         
     }
