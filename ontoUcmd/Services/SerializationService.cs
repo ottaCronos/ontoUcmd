@@ -195,15 +195,23 @@ namespace ontoUcmd.Services
             string outputText = "";
             foreach (var node in graphData.NodeElements)
             {
-                outputText += $"{node.name};";
+                outputText += $"element.{node.name};\n";
             } foreach (var node in graphData.NodeProjects) {
-                outputText += $"{node.name};";
+                outputText += $"project.{node.name};\n";
             }foreach (var node in graphData.NodeCaseStudies) {
-                outputText += $"{node.name};";
+                outputText += $"people.{node.name};\n";
             }foreach (var node in graphData.NodePublications) {
-                outputText += $"{node.name};";
+                outputText += $"publication.{node.name};\n";
             }foreach (var node in graphData.NodeCountries) {
-                outputText += $"{node.name};";
+                if (node.name.ToLower().Contains("country"))
+                {
+                    outputText += $"coutry.{node.name};\n";
+                }
+                else
+                {
+                    outputText += $"region.{node.name};\n";
+                }
+                
             }foreach (var concept in concepts)
             {
                 List<string> items = new List<string>();
@@ -215,7 +223,7 @@ namespace ontoUcmd.Services
                 int linkedCount = 0;
                 if (items.Count > 0)
                     linkedCount = items.Count;
-                outputText += $"{concept.Name}:{linkedCount}";
+                outputText += $"concept.{concept.Name}:{linkedCount};\n";
             }
             
             File.WriteAllText(buildPath, outputText);
