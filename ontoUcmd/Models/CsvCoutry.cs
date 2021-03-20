@@ -18,7 +18,7 @@ namespace ontoUcmd.Models
             
             List<CsvCountry> csvCountries = new List<CsvCountry>();
             var csvTable = new DataTable();
-            using (var csvReader = new CsvReader(new StreamReader(File.OpenRead(path)), true))  
+            using (var csvReader = new CsvReader(new StreamReader(File.OpenRead(path)), true, '|'))  
             {
                 csvTable.Load(csvReader);  
             } 

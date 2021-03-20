@@ -18,7 +18,7 @@ namespace ontoUcmd.Models
             
             List<CsvRegion> csvRegions = new List<CsvRegion>();
             var csvTable = new DataTable();
-            using (var csvReader = new CsvReader(new StreamReader(File.OpenRead(path)), true))  
+            using (var csvReader = new CsvReader(new StreamReader(File.OpenRead(path)), true, '|'))  
             {
                 csvTable.Load(csvReader);  
             } 

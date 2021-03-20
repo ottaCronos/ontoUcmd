@@ -17,3 +17,5 @@ C:\Users\vnoum\Desktop\Projets Rider\ontoUcmd\ontoUcmd\obj\Debug\net5.0\ontoUcmd
 C:\Users\vnoum\Desktop\Projets Rider\ontoUcmd\ontoUcmd\bin\Debug\net5.0\LumenWorks.Framework.IO.dll
 C:\Users\vnoum\Desktop\Projets Rider\ontoUcmd\ontoUcmd\obj\Debug\net5.0\ontoUcmd.csproj.CopyComplete
 C:\Users\vnoum\Desktop\Projets Rider\ontoUcmd\ontoUcmd\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\vnoum\Desktop\Projets Rider\ontoUcmd\ontoUcmd\bin\Debug\net5.0\ExcelDataReader.dll
+C:\Users\vnoum\Desktop\Projets Rider\ontoUcmd\ontoUcmd\bin\Debug\net5.0\ExcelDataReader.DataSet.dll

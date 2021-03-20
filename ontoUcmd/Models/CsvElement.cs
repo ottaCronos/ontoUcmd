@@ -26,16 +26,18 @@ namespace ontoUcmd.Models
             
             List<CsvElement> csvElements = new List<CsvElement>();
             var csvTable = new DataTable();
-            using (var csvReader = new CsvReader(new StreamReader(File.OpenRead(path)), true))  
+            using (var csvReader = new CsvReader(new StreamReader(File.OpenRead(path)), true, '|'))  
             {
                 csvTable.Load(csvReader);  
             } 
-            for (int i = 0; i < csvTable.Rows.Count; i++)  
-            {  
+            for (int i = 0; i < csvTable.Rows.Count; i++)
+            {
+                int year = 0;
+                Int32.TryParse(csvTable.Rows[i][5].ToString(), out year);
                 csvElements.Add(new CsvElement { Name = csvTable.Rows[i][0].ToString(), 
                     Label= csvTable.Rows[i][1].ToString(), Icon = csvTable.Rows[i][2].ToString(),
                     Description= csvTable.Rows[i][3].ToString(), List = csvTable.Rows[i][4].ToString(),
-                    Year= Int32.Parse(csvTable.Rows[i][5].ToString()), Link = csvTable.Rows[i][6].ToString(),
+                    Year= year, Link = csvTable.Rows[i][6].ToString(),
                     Images= csvTable.Rows[i][7].ToString(), Videos = csvTable.Rows[i][8].ToString(), LinkedElements = csvTable.Rows[i][9].ToString()
                 });  
             }

@@ -22,7 +22,7 @@ namespace ontoUcmd.Models
             
             List<CsvPublication> csvPublications = new List<CsvPublication>();
             var csvTable = new DataTable();
-            using (var csvReader = new CsvReader(new StreamReader(File.OpenRead(path)), true))  
+            using (var csvReader = new CsvReader(new StreamReader(File.OpenRead(path)), true, '|'))  
             {
                 csvTable.Load(csvReader);  
             } 

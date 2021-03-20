@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using ontoUcmd.Models;
 using ontoUcmd.Services;
 
@@ -12,10 +13,10 @@ namespace ontoUcmd
         
         static string iniPath = string.Format("{0}\\config.ini", Environment.CurrentDirectory);
 
-        
         static void Main(string[] args)
         {
             Console.WriteLine("OntoU CMD");
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Console.WriteLine("Commands: set-files, get-files, set-path, build");
             Console.WriteLine();
             while (true)
@@ -71,6 +72,9 @@ namespace ontoUcmd
                 Console.WriteLine($"     The file {lpath} already exists and will be updated.");
             Console.WriteLine();
 
+            Console.WriteLine("Converting Excel files to Csv...");
+
+            
             List<CsvElement> csvElements = new List<CsvElement>();
             List<CsvConcept> csvConcepts = new List<CsvConcept>();
             List<CsvCountry> csvCountries = new List<CsvCountry>();
@@ -81,44 +85,118 @@ namespace ontoUcmd
             
             Console.WriteLine("Reading data from csv documents...");
             string str = "";
+            string name = "";
+            Dictionary<string, string> dic = new Dictionary<string, string>();
 
-            str = ini.GetKeyValue("CsvFiles", "Elements");
+            // Converts all excel files found in config.ini to csv files, in a temporary dir.
+            name = "Elements";
+            str = ini.GetKeyValue("ExcelFiles", name);
+            if (!File.Exists(str))
+                Console.WriteLine($"error: {name} csv file could not be found.");
+            else
+            {
+                ExcelService.SaveAsCsv(str,
+                    Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + $@"\{name}.csv");
+                dic.Add(name, Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + $@"\{name}.csv");
+            }
+            name = "Concepts";
+            str = ini.GetKeyValue("ExcelFiles", name);
+            if (!File.Exists(str))
+                Console.WriteLine($"error: {name} csv file could not be found.");
+            else
+            {
+                ExcelService.SaveAsCsv(str,
+                    Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + $@"\{name}.csv");
+                dic.Add(name, Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + $@"\{name}.csv");
+            }
+            name = "Countries";
+            str = ini.GetKeyValue("ExcelFiles", name);
+            if (!File.Exists(str))
+                Console.WriteLine($"error: {name} csv file could not be found.");
+            else
+            {
+                ExcelService.SaveAsCsv(str,
+                    Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + $@"\{name}.csv");
+                dic.Add(name, Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + $@"\{name}.csv");
+            }
+            name = "Regions";
+            str = ini.GetKeyValue("ExcelFiles", name);
+            if (!File.Exists(str))
+                Console.WriteLine($"error: {name} csv file could not be found.");
+            else
+            {
+                ExcelService.SaveAsCsv(str,
+                    Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + $@"\{name}.csv");
+                dic.Add(name, Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + $@"\{name}.csv");
+            }
+            name = "Projects";
+            str = ini.GetKeyValue("ExcelFiles", name);
+            if (!File.Exists(str))
+                Console.WriteLine($"error: {name} csv file could not be found.");
+            else
+            {
+                ExcelService.SaveAsCsv(str,
+                    Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + $@"\{name}.csv");
+                dic.Add(name, Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + $@"\{name}.csv");
+            }
+            name = "Publications";
+            str = ini.GetKeyValue("ExcelFiles", name);
+            if (!File.Exists(str))
+                Console.WriteLine($"error: {name} csv file could not be found.");
+            else
+            {
+                ExcelService.SaveAsCsv(str,
+                    Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + $@"\{name}.csv");
+                dic.Add(name, Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + $@"\{name}.csv");
+            }
+            name = "People";
+            str = ini.GetKeyValue("ExcelFiles", name);
+            if (!File.Exists(str))
+                Console.WriteLine($"error: {name} csv file could not be found.");
+            else
+            {
+                ExcelService.SaveAsCsv(str,
+                    Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + $@"\{name}.csv");
+                dic.Add(name, Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + $@"\{name}.csv");
+            }
+            
+            str = dic["Elements"];
             if (!File.Exists(str))
                 Console.WriteLine("error: Elements csv file could not be found.");
             else
                 csvElements = CsvElement.FromFile(str);
             
-            str = ini.GetKeyValue("CsvFiles", "Concepts");
+            str = dic["Concepts"];
             if (!File.Exists(str))
                 Console.WriteLine("error: Concepts csv file could not be found.");
             else
                 csvConcepts = CsvConcept.FromFile(str);
             
-            str = ini.GetKeyValue("CsvFiles", "Countries");
+            str = dic["Countries"];
             if (!File.Exists(str))
                 Console.WriteLine("error: Countries csv file could not be found.");
             else
                 csvCountries = CsvCountry.FromFile(str);
             
-            str = ini.GetKeyValue("CsvFiles", "Regions");
+            str = dic["Regions"];
             if (!File.Exists(str))
                 Console.WriteLine("error: Regions csv file could not be found.");
             else
                 csvRegions = CsvRegion.FromFile(str);
             
-            str = ini.GetKeyValue("CsvFiles", "People");
+            str = dic["People"];
             if (!File.Exists(str))
                 Console.WriteLine("error: People csv file could not be found.");
             else
                 csvPeoples = CsvPeople.FromFile(str);
             
-            str = ini.GetKeyValue("CsvFiles", "Projects");
+            str = dic["Projects"];
             if (!File.Exists(str))
                 Console.WriteLine("error: Projects csv file could not be found.");
             else
                 csvProjects = CsvProject.FromFile(str);
             
-            str = ini.GetKeyValue("CsvFiles", "Publications");
+            str = dic["Publications"];
             if (!File.Exists(str))
                 Console.WriteLine("error: Publications csv file could not be found.");
             else
@@ -199,43 +277,43 @@ namespace ontoUcmd
             string str = "";
             string name = "";
 
-            name = "Elements"; str = ini.GetKeyValue("CsvFiles", name);
+            name = "Elements"; str = ini.GetKeyValue("ExcelFiles", name);
             if(string.IsNullOrEmpty(str))
                 Console.WriteLine($"     {name}: this field is empty, fix this by doing 'set-files'.");
             else
                 Console.WriteLine($"     {name}: {str}");
             
-            name = "Concepts"; str = ini.GetKeyValue("CsvFiles", name);
+            name = "Concepts"; str = ini.GetKeyValue("ExcelFiles", name);
             if(string.IsNullOrEmpty(str))
                 Console.WriteLine($"     {name}: this field is empty, fix this by doing 'set-files'.");
             else
                 Console.WriteLine($"     {name}: {str}");
             
-            name = "People"; str = ini.GetKeyValue("CsvFiles", name);
+            name = "People"; str = ini.GetKeyValue("ExcelFiles", name);
             if(string.IsNullOrEmpty(str))
                 Console.WriteLine($"     {name}: this field is empty, fix this by doing 'set-files'.");
             else
                 Console.WriteLine($"     {name}: {str}");
             
-            name = "Publications"; str = ini.GetKeyValue("CsvFiles", name);
+            name = "Publications"; str = ini.GetKeyValue("ExcelFiles", name);
             if(string.IsNullOrEmpty(str))
                 Console.WriteLine($"     {name}: this field is empty, fix this by doing 'set-files'.");
             else
                 Console.WriteLine($"     {name}: {str}");
             
-            name = "Countries"; str = ini.GetKeyValue("CsvFiles", name);
+            name = "Countries"; str = ini.GetKeyValue("ExcelFiles", name);
             if(string.IsNullOrEmpty(str))
                 Console.WriteLine($"     {name}: this field is empty, fix this by doing 'set-files'.");
             else
                 Console.WriteLine($"     {name}: {str}");
             
-            name = "Regions"; str = ini.GetKeyValue("CsvFiles", name);
+            name = "Regions"; str = ini.GetKeyValue("ExcelFiles", name);
             if(string.IsNullOrEmpty(str))
                 Console.WriteLine($"     {name}: this field is empty, fix this by doing 'set-files'.");
             else
                 Console.WriteLine($"     {name}: {str}");
             
-            name = "Projects"; str = ini.GetKeyValue("CsvFiles", name);
+            name = "Projects"; str = ini.GetKeyValue("ExcelFiles", name);
             if(string.IsNullOrEmpty(str))
                 Console.WriteLine($"     {name}: this field is empty, fix this by doing 'set-files'.");
             else
@@ -257,43 +335,43 @@ namespace ontoUcmd
             string elements = Console.ReadLine();
             if(!File.Exists(elements))
                 Console.WriteLine($"[Alert] The file '{elements}' does not exists.");
-            ini.SetKeyValue("CsvFiles", "Elements", elements);
+            ini.SetKeyValue("ExcelFiles", "Elements", elements);
             
             Console.Write("     Concepts csv file: ");
             string concepts = Console.ReadLine();
             if(!File.Exists(concepts))
                 Console.WriteLine($"[Alert] The file '{concepts}' does not exists.");
-            ini.SetKeyValue("CsvFiles", "Concepts", concepts);
+            ini.SetKeyValue("ExcelFiles", "Concepts", concepts);
             
             Console.Write("     People csv file: ");
             string peoples = Console.ReadLine();
             if(!File.Exists(peoples))
                 Console.WriteLine($"[Alert] The file '{peoples}' does not exists.");
-            ini.SetKeyValue("CsvFiles", "People", peoples);
+            ini.SetKeyValue("ExcelFiles", "People", peoples);
             
             Console.Write("     Projects csv file: ");
             string projects = Console.ReadLine();
             if(!File.Exists(projects))
                 Console.WriteLine($"[Alert] The file '{projects}' does not exists.");
-            ini.SetKeyValue("CsvFiles", "Projects", projects);
+            ini.SetKeyValue("ExcelFiles", "Projects", projects);
             
             Console.Write("     Publications csv file: ");
             string publications = Console.ReadLine();
             if(!File.Exists(publications))
                 Console.WriteLine($"[Alert] The file '{publications}' does not exists.");
-            ini.SetKeyValue("CsvFiles", "Publications", publications);
+            ini.SetKeyValue("ExcelFiles", "Publications", publications);
             
             Console.Write("     Countries csv file: ");
             string countries = Console.ReadLine();
             if(!File.Exists(countries))
                 Console.WriteLine($"[Alert] The file '{countries}' does not exists.");
-            ini.SetKeyValue("CsvFiles", "Countries", countries);
+            ini.SetKeyValue("ExcelFiles", "Countries", countries);
             
             Console.Write("     Regions csv file: ");
             string regions = Console.ReadLine();
             if(!File.Exists(regions))
                 Console.WriteLine($"[Alert] The file '{regions}' does not exists.");
-            ini.SetKeyValue("CsvFiles", "Regions", regions);
+            ini.SetKeyValue("ExcelFiles", "Regions", regions);
             
             Console.WriteLine();
             Console.Write("Configuration completed. Do you want to save theses files to the config.ini (this will erease the current file data) ? Y/N : ");

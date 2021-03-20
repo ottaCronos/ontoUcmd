@@ -18,7 +18,7 @@ namespace ontoUcmd.Models
             
             List<CsvConcept> csvConcepts = new List<CsvConcept>();
             var csvTable = new DataTable();
-            using (var csvReader = new CsvReader(new StreamReader(File.OpenRead(path)), true))  
+            using (var csvReader = new CsvReader(new StreamReader(File.OpenRead(path)), true, '|'))  
             {
                 csvTable.Load(csvReader);  
             } 
