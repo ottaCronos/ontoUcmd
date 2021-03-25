@@ -211,7 +211,7 @@ namespace ontoUcmd
             Console.WriteLine("Graph file has been build.");
             
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("[Info] Do you want to build locations.txt file ? Y/N : ");
+            Console.Write("[Info] Do you want to build locations files (txt/json) ? Y/N : ");
             string resp = Console.ReadLine();
             Console.ForegroundColor = ConsoleColor.Gray;
             if (!string.IsNullOrEmpty(resp) && resp.ToLower() == "y")
@@ -220,20 +220,16 @@ namespace ontoUcmd
                 Console.WriteLine("Building location text file...");
                 SerializationService.BuildLocationFile(lpath, graphData, csvConcepts);
                 Console.WriteLine("Location text file has been build.");
-                Console.WriteLine($"     Location output path : {lpath}");
+                Console.WriteLine("Building location json file...");
+                ConstellationLocationGenerator.Build(lpath, $"{Path.GetDirectoryName(lpath)}\\constellation-node-locations_.json");
+                Console.WriteLine("Location json file has been build.");
+                Console.WriteLine($"     Location txt output path : {lpath}");
+                Console.WriteLine($"     Location txt output path : {Path.GetDirectoryName(lpath)}\\constellation-node-locations_.json");
             }
             Console.WriteLine($"     Output path : {path}");
             
-            /*Console.Write("Do you want to reveal files in explorer ? Y/N :");
-            string resp2 = Console.ReadLine();
-            if (!string.IsNullOrEmpty(resp2) && resp2.ToLower() == "y")
-            {
-                Process proc = new Process() {StartInfo = new ProcessStartInfo() {UseShellExecute = true, Arguments = @$"""{Path.GetDirectoryName(path)}""", FileName = "start"}};
-                Process proc2 = new Process() {StartInfo = new ProcessStartInfo() {UseShellExecute = true, Arguments = @$"""{Path.GetDirectoryName(lpath)}""", FileName = "start"}};
-                proc.Start();
-                if(locationBuild)
-                    proc2.Start();
-            }*/
+            
+            
             Console.WriteLine("");
             
         }
